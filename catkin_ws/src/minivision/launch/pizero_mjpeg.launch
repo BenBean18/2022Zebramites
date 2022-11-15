@@ -1,0 +1,6 @@
+<launch>
+    <node pkg="minivision" type="mjpeg_to_ros.py" name="mjpeg_to_ros" output="screen">
+        <param name="url" value="http://192.168.50.88:7272/stream.mjpg"/>
+        <param name="ns" value="pizero"/>
+    </node>
+</launch>
