@@ -9,3 +9,9 @@
 - git:
     local-name: apriltag_ros
     uri: https://github.com/AprilRobotics/apriltag_ros.git
+- git:
+    local-name: ros_control_boilerplate
+    uri: https://github.com/PickNikRobotics/ros_control_boilerplate.git
+- git:
+    local-name: gazebo_ros_demos
+    uri: https://github.com/ros-simulation/gazebo_ros_demos.git

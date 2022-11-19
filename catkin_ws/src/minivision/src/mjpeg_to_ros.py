@@ -21,7 +21,7 @@ while not rospy.is_shutdown():
         jpg = bytes[a:b+2]
         bytes = bytes[b+2:]
         i = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-        image_message = bridge.cv2_to_imgmsg(i, encoding="rgb8")
+        image_message = bridge.cv2_to_imgmsg(i, encoding="bgr8")
         image_message.header.stamp = t
         image_message.header.frame_id = "pizero"
         pub.publish(image_message)

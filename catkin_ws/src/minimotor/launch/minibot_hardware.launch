@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- GDB functionality -->
+  <arg name="debug" default="false" />
+  <arg unless="$(arg debug)" name="launch_prefix" value="" />
+  <arg     if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
+
+  <!-- Load example URDF -->
+  <param name="robot_description" command="$(find xacro)/xacro '$(find rrbot_description)/urdf/rrbot.xacro'" />
+
+  <group ns="minibot">
+
+    <!-- Load hardware interface -->
+    <node name="minibot_hardware_interface" pkg="minimotor" type="minibot_hw_main"
+          output="screen" launch-prefix="$(arg launch_prefix)"/>
+
+    <!-- Load controller settings -->
+    <rosparam file="$(find minimotor)/config/minibot_controllers.yaml" command="load"/>
+
+    <!-- Load controller manager -->
+    <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false"
+	  output="screen" args="spawn joint_state_controller intake_controller diffbot_controller" />
+
+    <!-- Convert joint states to /tf tranforms -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  </group>
+
+</launch>
