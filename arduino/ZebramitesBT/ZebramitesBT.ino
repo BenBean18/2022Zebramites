@@ -12,8 +12,6 @@ NoU_Motor leftMotor(3);
 NoU_Motor rightMotor(4);
 NoU_Motor intake(1);
 
-
-
 void setup() {
   bluetooth.begin("Zebramites");
   leftMotor.setInverted(false);
@@ -25,10 +23,11 @@ void setup() {
 }
 
 void loop() {
-  if(bluetooth.available() > 0)
+  // format: z<MOTOR ID>;<MOTOR POWER>;
+  if(bluetooth.available() > 0 && bluetooth.read() == 'z')
   {
-    int motorId = bluetooth.parseInt();
-    double speed = bluetooth.parseFloat();
+    int motorId = bluetooth.readStringUntil(';').toInt();
+    double speed = bluetooth.readStringUntil(';').toFloat();
 
     switch (motorId) {
       case 1:
