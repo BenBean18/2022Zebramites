@@ -8,6 +8,10 @@ import rospy
 from sensor_msgs.msg import Image, CameraInfo
 from std_msgs.msg import Float64
 from image_geometry import PinholeCameraModel
+import tf_conversions
+
+import tf2_ros
+import geometry_msgs.msg
 
 # Import the OpenCV bridge
 from cv_bridge import CvBridge
@@ -60,6 +64,23 @@ def callback(msg):
         tf = pcm.projectPixelTo3dRay(pcm.rectifyPoint((x, y)))
         ntf = (tf[0] * distance(w), tf[1] * distance(w), tf[2] * distance(w))
         rospy.loginfo_throttle(0.5, ntf)
+
+        br = tf2_ros.TransformBroadcaster()
+        t = geometry_msgs.msg.TransformStamped()
+
+        t.header.stamp = rospy.Time.now()
+        t.header.frame_id = "pizero"
+        t.child_frame_id = "ball"
+        t.transform.translation.x = ntf[0]
+        t.transform.translation.y = ntf[1]
+        t.transform.translation.z = ntf[2]
+
+        t.transform.rotation.x = 0
+        t.transform.rotation.y = 0
+        t.transform.rotation.z = 0
+        t.transform.rotation.w = 1
+
+        br.sendTransform(t)
     except Exception as e:
         rospy.logwarn_throttle(1, e)
 

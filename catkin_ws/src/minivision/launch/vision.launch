@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find minivision)/launch/pizero_mjpeg.launch"/>
+    <include file="$(find minivision)/launch/detect_apriltags.launch"/>
+    <node pkg="minivision" type="find_balls.py" name="find_balls" output="screen"/>
+</launch>

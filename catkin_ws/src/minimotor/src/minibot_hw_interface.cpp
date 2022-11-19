@@ -56,11 +56,12 @@ MiniBotJoint::MiniBotJoint() {
 
 }
 
-MiniBotMotorJoint::MiniBotMotorJoint(serial_port *p, uint8_t port, double velocity_mult, ros::NodeHandle &nh, bool inverted) : MiniBotJoint(motor) {
+MiniBotMotorJoint::MiniBotMotorJoint(serial_port *p, uint8_t port, double velocity_mult, double velocity_y_intercept, ros::NodeHandle &nh, bool inverted) : MiniBotJoint(motor) {
   this->type = motor;
   this->inverted = inverted;
   this->port = port;
   this->velocity_mult = velocity_mult;
+  this->velocity_y_intercept = velocity_y_intercept;
   this->nh = nh;
   this->pub = nh.advertise<std_msgs::Float64>("/motor"+std::to_string(port)+"/command", 5);
   this->p = p;
@@ -68,9 +69,12 @@ MiniBotMotorJoint::MiniBotMotorJoint(serial_port *p, uint8_t port, double veloci
 
 void MiniBotMotorJoint::sendCommand(double cmd) {
   if (this->lastCmdSent != cmd) {
-    double output = (inverted ? -1.0d : 1.0d) * velocity_mult * cmd;
+    double output = (inverted ? -1.0d : 1.0d) * (velocity_y_intercept + velocity_mult * cmd);
+    if (cmd == 0) {
+      output = 0.0;
+    }
     this->lastCmdSent = cmd;
-    std::string toWrite = std::to_string(port) + ";" + std::to_string(output) + "\n";
+    std::string toWrite = "z" + std::to_string(port) + ";" + std::to_string(output) + ";";
     auto cs = toWrite.c_str();
     ROS_INFO_STREAM(toWrite);
     boost::asio::write(*p, const_buffer(cs, strlen(cs)));
@@ -98,10 +102,12 @@ MiniBotJoint* parseJoint(ros::NodeHandle nh, const std::string &n, serial_port *
     bool inverted;
     int port;
     double velocity_mult;
+    double vyi;
     error += !rosparam_shortcuts::get(n, rpnh, "inverted", inverted);
     error += !rosparam_shortcuts::get(n, rpnh, "port", port);
     error += !rosparam_shortcuts::get(n, rpnh, "velocity_mult", velocity_mult);
-    MiniBotMotorJoint* j = new MiniBotMotorJoint(p, port, velocity_mult, nh, inverted);
+    error += !rosparam_shortcuts::get(n, rpnh, "velocity_y_intercept", vyi);
+    MiniBotMotorJoint* j = new MiniBotMotorJoint(p, port, velocity_mult, vyi, nh, inverted);
     ROS_INFO_STREAM("Motor joint, name = " << n << ", port = " << port << ", inverted = " << inverted << ", vmult = " << velocity_mult);
     rosparam_shortcuts::shutdownIfError(n, error);
     return j;

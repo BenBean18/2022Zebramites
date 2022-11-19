@@ -23,19 +23,22 @@ intake:
    type: motor
    port: 1
    inverted: false
-   velocity_mult: 0.02984155186 # maps velocity to percent output (-1.0 to 1.0)
+   velocity_mult: 0.0109 # maps velocity to percent output (-1.0 to 1.0)
+   velocity_y_intercept: 0.595
 
 leftMotor:
    type: motor
    port: 3
    inverted: false
-   velocity_mult: 0.04101931526 # maps velocity to percent output (-1.0 to 1.0)
+   velocity_mult: 0.0109 # maps velocity to percent output (-1.0 to 1.0)
+   velocity_y_intercept: 0.595
 
 rightMotor:
    type: motor
    port: 4
    inverted: true
-   velocity_mult: 0.04101931526 # maps velocity (rad/sec) to percent output (-1.0 to 1.0). this is 1/(320 rpm converted to rad/sec)
+   velocity_mult: 0.0109 # maps velocity (rad/sec) to percent output (-1.0 to 1.0). this is 1/(320 rpm converted to rad/sec)
+   velocity_y_intercept: 0.595
 
 # Individual Position Controllers ---------------------------------------
 # Allows to send individual ROS msg of Float64 to each joint separately
@@ -66,5 +69,5 @@ diffbot_controller:
    linear:
       x:
          has_velocity_limits: true
-         max_velocity: 0.8
-         min_velocity: -0.8
+         max_velocity: 1.23
+         min_velocity: -1.23

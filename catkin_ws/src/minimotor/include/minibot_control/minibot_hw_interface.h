@@ -67,11 +67,12 @@ public:
   bool inverted;
   uint8_t port;
   double velocity_mult;
+  double velocity_y_intercept;
   ros::NodeHandle nh;
   ros::Publisher pub;
   double lastCmdSent;
   serial_port *p;
-  MiniBotMotorJoint(serial_port *p, uint8_t port, double velocity_mult, ros::NodeHandle &nh, bool inverted = false);
+  MiniBotMotorJoint(serial_port *p, uint8_t port, double velocity_mult, double velocity_y_intercept, ros::NodeHandle &nh, bool inverted = false);
 
   void sendCommand(double cmd);
 };

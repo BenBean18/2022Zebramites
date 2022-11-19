@@ -6,10 +6,10 @@ from geometry_msgs.msg import Twist
 def talker():
     pub = rospy.Publisher('/minibot/diffbot_controller/cmd_vel', Twist, queue_size=10)
     rospy.init_node('talker', anonymous=True)
-    rate = rospy.Rate(10) # 10hz
+    rate = rospy.Rate(100) # 10hz
     s = time.time()
     msg = Twist()
-    msg.linear.x = 0.6
+    msg.linear.x = 1.0
     pub.publish(msg)
     while time.time() - s < 1:
         rate.sleep()
