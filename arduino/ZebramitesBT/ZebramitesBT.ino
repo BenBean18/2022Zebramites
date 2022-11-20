@@ -14,6 +14,8 @@ NoU_Motor intake(1);
 
 void setup() {
   bluetooth.begin("Zebramites");
+  bluetooth.setTimeout(5);
+  Serial.begin(115200);
   leftMotor.setInverted(false);
   rightMotor.setInverted(false);
   intake.setInverted(false);
@@ -24,8 +26,9 @@ void setup() {
 
 void loop() {
   // format: z<MOTOR ID>;<MOTOR POWER>;
-  if(bluetooth.available() > 0 && bluetooth.read() == 'z')
+  while(bluetooth.available() > 0 && bluetooth.read() == 'z')
   {
+    Serial.println("data");
     int motorId = bluetooth.readStringUntil(';').toInt();
     double speed = bluetooth.readStringUntil(';').toFloat();
 
@@ -40,7 +43,11 @@ void loop() {
         rightMotor.set(speed);
         break;
     }
+    Serial.print(motorId);
+    Serial.print(" ");
+    Serial.println(speed);
+    RSL::update();
   }
   RSL::update();
-  delay(10);
+  delay(1);
 }
