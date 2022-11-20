@@ -50,6 +50,12 @@ int main(int argc, char** argv)
   io_service ios;
   serial_port *port = new serial_port(ios, "/dev/ttyS1");
 
+  try {
+    port->set_option(boost::asio::serial_port_base::baud_rate(115200));
+  } catch (boost::system::system_error::exception e) {
+    ROS_ERROR_STREAM("error setting serial port baud rate");
+  }
+
   // NOTE: We run the ROS loop in a separate thread as external calls such
   // as service callbacks to load controllers can block the (main) control loop
   ros::AsyncSpinner spinner(3);

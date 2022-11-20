@@ -39,7 +39,7 @@ def callback(msg):
 
     # Define the range of yellow
     lower_yellow = np.array([45/2, 0.2*255, 0.15*255]) # HLS not HSL
-    upper_yellow = np.array([75/2, 0.6*255, 0.35*255])
+    upper_yellow = np.array([55/2, 0.6*255, 1.0*255])
 
     # Threshold the HSV image to get only yellow colors
     mask = cv2.inRange(hsv, lower_yellow, upper_yellow)

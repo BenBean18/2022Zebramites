@@ -69,7 +69,7 @@ MiniBotMotorJoint::MiniBotMotorJoint(serial_port *p, uint8_t port, double veloci
 
 void MiniBotMotorJoint::sendCommand(double cmd) {
   if (this->lastCmdSent != cmd) {
-    double output = (inverted ? -1.0d : 1.0d) * (velocity_y_intercept + velocity_mult * cmd);
+    double output = (inverted ? -1.0d : 1.0d) * ((cmd >= 0 ? 1 : -1) * velocity_y_intercept + velocity_mult * cmd);
     if (cmd == 0) {
       output = 0.0;
     }
@@ -77,7 +77,8 @@ void MiniBotMotorJoint::sendCommand(double cmd) {
     std::string toWrite = "z" + std::to_string(port) + ";" + std::to_string(output) + ";";
     auto cs = toWrite.c_str();
     ROS_INFO_STREAM(toWrite);
-    boost::asio::write(*p, const_buffer(cs, strlen(cs)));
+    //boost::asio::write(*p, const_buffer(cs, strlen(cs)));
+    p->write_some(const_buffer(cs, strlen(cs)));
   }
   // ROS_INFO_STREAM("Setting port " << std::to_string(port) << " to " << output);
 }
