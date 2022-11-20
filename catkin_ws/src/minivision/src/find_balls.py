@@ -13,6 +13,9 @@ import tf_conversions
 import tf2_ros
 import geometry_msgs.msg
 
+# Import GRIP-generated image pipeline
+from boulder import BallPipeline
+
 # Import the OpenCV bridge
 from cv_bridge import CvBridge
 bridge = CvBridge()
@@ -21,6 +24,8 @@ bridge = CvBridge()
 rospy.init_node('ball_finder')
 
 caminfo = None
+
+p = BallPipeline()
 
 def distance(px):
     try:
@@ -34,18 +39,22 @@ def callback(msg):
     # Convert the image from a ROS message to a numpy array
     img = bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
-    # Convert to HSV
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+    # # Convert to HSV
+    # hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
 
-    # Define the range of yellow
-    lower_yellow = np.array([45/2, 0.2*255, 0.15*255]) # HLS not HSL
-    upper_yellow = np.array([55/2, 0.6*255, 1.0*255])
+    # # Define the range of yellow
+    # lower_yellow = np.array([45/2, 0.2*255, 0.15*255]) # HLS not HSL
+    # upper_yellow = np.array([55/2, 0.6*255, 1.0*255])
 
-    # Threshold the HSV image to get only yellow colors
-    mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
+    # # Threshold the HSV image to get only yellow colors
+    # mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
 
-    # Find blobs in the mask
-    contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # # Find blobs in the mask
+    # contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    p.process(img)
+
+    contours = p.filter_contours_output
 
     try:
         # Find the largest contour
