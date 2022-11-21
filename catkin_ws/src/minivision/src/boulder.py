@@ -19,8 +19,11 @@ class BallPipeline:
 
         self.__hsv_threshold_input = self.blur_0_output
         self.__hsv_threshold_hue = [14.56834532374101, 30.548288641813826]
-        self.__hsv_threshold_saturation = [71.08812949640286, 255.0]
-        self.__hsv_threshold_value = [110.07194244604315, 255.0]
+        #self.__hsv_threshold_saturation = [71.08812949640286, 255.0]
+        #self.__hsv_threshold_saturation = [10, 255.0]
+        self.__hsv_threshold_saturation = [58, 255.0]
+        # self.__hsv_threshold_value = [110.07194244604315, 255.0]
+        self.__hsv_threshold_value = [57, 255.0]
 
         self.hsv_threshold_output = None
 
@@ -51,11 +54,11 @@ class BallPipeline:
         self.__filter_contours_max_width = 1000
         self.__filter_contours_min_height = 0
         self.__filter_contours_max_height = 1000
-        self.__filter_contours_solidity = [42.43723665135686, 100]
+        self.__filter_contours_solidity = [56, 100]
         self.__filter_contours_max_vertices = 1000000
         self.__filter_contours_min_vertices = 16.0
         self.__filter_contours_min_ratio = 0
-        self.__filter_contours_max_ratio = 1000
+        self.__filter_contours_max_ratio = 1.5
 
         self.filter_contours_output = None
 

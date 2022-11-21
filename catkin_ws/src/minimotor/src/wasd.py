@@ -9,7 +9,7 @@ def talker():
     rate = rospy.Rate(100) # 10hz
     s = time.time()
     msg = Twist()
-    msg.linear.x = 1.0
+    msg.linear.x = 0.5
     pub.publish(msg)
     while time.time() - s < 1:
         rate.sleep()
