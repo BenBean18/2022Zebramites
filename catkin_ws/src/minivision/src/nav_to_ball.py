@@ -19,14 +19,14 @@ print("Hi!")
 rate = rospy.Rate(10.0)
 while not rospy.is_shutdown():
     try:
-        trans = tfBuffer.lookup_transform("pizero", "ball", rospy.Time.now() + rospy.Duration(0.25), rospy.Duration(1.0))
+        trans = tfBuffer.lookup_transform("base_link", "ball", rospy.Time.now(), rospy.Duration(1.0))
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
         rate.sleep()
         continue
 
     msg = geometry_msgs.msg.Twist()
 
-    a = math.atan2(trans.transform.translation.y, trans.transform.translation.x) - 0.08 # middle ~= 0.08
+    a = math.atan2(trans.transform.translation.y, trans.transform.translation.x)
 
     print(a)
 
